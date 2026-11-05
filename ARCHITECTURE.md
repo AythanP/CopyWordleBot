@@ -1,11 +1,7 @@
 # Techdle Diagram
 
-This diagram shows how `/techdle` and `/guess` commands use the game code and saved game file.
+This diagram shows how our Techdle bot uses `/techdle` and `/guess` commands to saved game files.
 
-```mermaid
-flowchart TD
-    A[Player runs /techdle]
-```
 # Aythan - Data Flow
 
 # Anthony - Network Diagram
