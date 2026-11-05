@@ -6,6 +6,15 @@ This diagram shows how `/techdle` and `/guess` commands use the game code and sa
 flowchart TD
     A[Player runs /techdle]
 ```
+# Aythan - Data Flow
+
+# Anthony - Network Diagram
+
+# Mario - Control Flow
+
+# Sida - Class Diagram
+
+# Abhi - Use Case Diagram
 
 Each player has one current game. Starting `/techdle` again replaces that player's game. Guesses must be five letters and any five-letter guess is scored without checking a word list. Invalid guesses use no attempts.
 
