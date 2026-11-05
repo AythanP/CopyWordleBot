@@ -15,3 +15,8 @@ flowchart TD
 Each player has one current game. Starting `/techdle` again replaces that player's game. Guesses must be five letters; any five-letter guess is scored, without checking a word list. Invalid guesses use no attempt.
 
 **Code:** `src/events/interactionCreate.js` handles commands and replies; `src/game/` contains the rules and feedback; `src/game/store.js` saves games; and `src/game/words.js` provides tech answers.
+
+```mermaid
+flowchart dataflow
+    A[Discord.js] -->|API-compatible JSON data for slash commands|B[techdle.js]
+```
