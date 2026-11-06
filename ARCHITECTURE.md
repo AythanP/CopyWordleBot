@@ -28,7 +28,6 @@ flowchart TD
     F[registerTechdle.js]
     G((Validate .env variables))
     H((Register the slash commands))
-    I[Discord.js]
     end
     A-->|API-compatible JSON data for slash commands|B
     B-->|Builder class|C
