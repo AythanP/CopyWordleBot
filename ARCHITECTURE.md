@@ -20,11 +20,21 @@ This diagram shows the dataflows between Discord's API and our bot.
 
 ```mermaid
 flowchart TD
-    subgraph 1
-    direction LR
     A[Discord.js]
     B[techdle.js]
     C((Build commands))
+    D((Convert to JSON))
+    E[.env file]
+    F[registerTechdle.js]
+    G((Validate .env variables))
+    H((Register the slash commands))
+    I[Discord.js]
     end
     A-->|API-compatible JSON data for slash commands|B
+    B-->|Builder class|C
+    C-->|/techdle and /guess slash command definitions|D
+    D-->|Array of JSON commands retunred by techdleCommands()|F
+    A-->|HTTP client used to communicate with Discord's API|F
+    A-->|Collection of API endpoint/URL builders from Discord|F
+    E-->|DiscordBot Token, user ID, server ID|F
 ```
