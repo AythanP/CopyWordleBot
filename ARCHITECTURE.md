@@ -28,17 +28,22 @@ flowchart TD
     F[registerTechdle.js]
     G((Validate .env variables))
     H((Register the slash commands))
-    I((Vakudate .env variables))
+    I((Validate .env variables))
     J((Register the slash commands))
     K[Discord.js]
     L[Console/Terminal]
-    classDef InputOutput1 fill:#ffd700;
 
-    A::InputOutput1-->|API-compatible JSON data for slash commands|B
+    A-->|API-compatible JSON data for slash commands|B
     B-->|Builder class|C
     C-->|/techdle and /guess slash command definitions|D
     D-->|Array of JSON commands returned by the techdleCommands function|F
     A-->|HTTP client used to communicate with Discord's API|F
     A-->|Collection of API endpoint/URL builders from Discord|F
     E-->|DiscordBot Token, user ID, server ID|F
+    F-->|Discord bot token, user ID, server ID|I
+    F-->|Array of JSON commands returned by the techdleCommands function|J
+    J-->|Discord API endpoint for each command|K
+    J-->|HTTP request for each command|K
+    I-->|Validation result|L
+    K-->|Command registration result|L
 ```
