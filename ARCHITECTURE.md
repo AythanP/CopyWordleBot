@@ -22,5 +22,5 @@ This diagram shows the dataflows between Discord's API and our bot.
 flowchart TD
     subgraph 1
     direction LR
-    A[Discord.js]-->B[techdle.js]
+    A[Discord.js] --> B[techdle.js]
 ```
