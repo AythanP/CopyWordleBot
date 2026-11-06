@@ -22,5 +22,5 @@ This diagram shows the dataflows between Discord's API and our bot.
 flowchart TB
     subgraph 1
     direction LR
-    A[Discord.js]-->|API-compatible JSON data for slash commands|B[techdle.js]
+    A[Discord.js]-- API-compatible JSON data for slash commands -->B[techdle.js]
 ```
