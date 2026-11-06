@@ -20,21 +20,21 @@ This diagram shows the dataflows between Discord's API and our bot.
 
 ```mermaid
 flowchart TD
-    A::InputOutput1[Discord.js]
-    B::InputOutput1[techdle.js]
+    A[Discord.js]
+    B[techdle.js]
     C((Build commands))
     D((Convert to JSON))
-    E::InputOutput1[.env file]
-    F::InputOutput1[registerTechdle.js]
+    E[.env file]
+    F[registerTechdle.js]
     G((Validate .env variables))
     H((Register the slash commands))
     I((Vakudate .env variables))
     J((Register the slash commands))
-    K::InputOutput1[Discord.js]
+    K[Discord.js]
     L[Console/Terminal]
     classDef InputOutput1 fill:#ffd700;
 
-    A-->|API-compatible JSON data for slash commands|B
+    A::InputOutput1-->|API-compatible JSON data for slash commands|B
     B-->|Builder class|C
     C-->|/techdle and /guess slash command definitions|D
     D-->|Array of JSON commands returned by the techdleCommands function|F
