@@ -16,7 +16,7 @@ Each player has one current game. Starting `/techdle` again replaces that player
 
 **Code:** `src/events/interactionCreate.js` handles commands and replies; `src/game/` contains the rules and feedback; `src/game/store.js` saves games; and `src/game/words.js` provides tech answers.
 
-This diagram shows the dataflows between Discord's API and our bot.
+This diagram by Aythan shows the dataflows between Discord's API and our bot.
 
 ```mermaid
 flowchart TD
