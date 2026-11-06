@@ -33,6 +33,22 @@ flowchart TD
     I-->|Command registration result|J
 ```
 # Anthony - Network Diagram
+This diagram shows the devices and networks involved when someone plays Techdle. Players never talk to the bot directly: everything goes through the Internet and Discord's servers.
+
+```mermaid
+flowchart LR
+A[Player PC or phone<br/>Discord app]
+B((Internet))
+C[Discord servers<br/>Gateway and API]
+D[Techdle bot<br/>Node.js on host PC]
+E[(Saved games<br/>techdle-games.json)]
+F[Online word list<br/>GitHub]
+A <-->|HTTPS| B
+B <-->|HTTPS and WebSocket| C
+C <-->|commands in, replies out| D
+D <-->|read and write| E
+D -->|HTTPS download| F
+```
 
 # Mario - Control Flow
 This diagram shows the control flow between user inputs and outputs, changing logic depending on entries are valid or invalid. 
