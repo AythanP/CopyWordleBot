@@ -36,7 +36,7 @@ flowchart TD
 
 # Mario - Control Flow
 This diagram shows the control flow between user inputs and outputs, changing logic depending on entries are valid or invalid. 
-<img width="485" height="342" alt="Untitled Diagram drawio (1)" src="https://github.com/user-attachments/assets/35efae80-0385-4d60-91ef-7cc4ce106027" />
+<img width="631" height="445" alt="Untitled Diagram drawio (1)" src="https://github.com/user-attachments/assets/35efae80-0385-4d60-91ef-7cc4ce106027" />
 
 
 # Sida - Class Diagram
