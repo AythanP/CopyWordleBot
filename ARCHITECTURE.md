@@ -19,8 +19,23 @@ Each player has one current game. Starting `/techdle` again replaces that player
 This diagram shows the dataflows between Discord's API and our bot.
 
 ```mermaid
-flowchart TD
-    subgraph 1
-    direction LR
-    A[Discord.js] --> B[techdle.js]
+flowchart LR
+  subgraph Client
+    UI[Web app]
+    Cache[(Local cache)]
+  end
+  subgraph Services
+    API[API gateway]
+    Auth[Auth service]
+    Orders[Order service]
+  end
+  subgraph Storage
+    DB[(Orders DB)]
+  end
+  UI --> API
+  UI --> Cache
+  API --> Auth
+  API --> Orders
+  Orders --> DB
+  Auth -. token .-> UI
 ```
