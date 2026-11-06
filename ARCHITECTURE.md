@@ -32,7 +32,7 @@ flowchart TD
     J((Register the slash commands))
     K::InputOutput1[Discord.js]
     L[Console/Terminal]
-    classDef InputOutput1 fill:#FDDA0D;
+    classDef InputOutput1 fill:#ffd700,;
 
     A-->|API-compatible JSON data for slash commands|B
     B-->|Builder class|C
