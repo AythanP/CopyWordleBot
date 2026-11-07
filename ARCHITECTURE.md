@@ -50,6 +50,16 @@ D <-->|read and write| E
 D -->|HTTPS download| F
 ```
 
+| Connection | Protocol | What it carries |
+|---|---|---|
+| Player ↔ Internet | HTTPS | Messages and slash commands from the Discord app |
+| Internet ↔ Discord servers | HTTPS and WebSocket | Player commands going in, bot replies coming out |
+| Discord servers ↔ Techdle bot | WebSocket in, HTTPS out | `/techdle` and `/guess` commands in, the bot's replies out |
+| Techdle bot ↔ Saved games | File read and write | Each player's current game in `data/techdle-games.json` |
+| Techdle bot → Online word list | HTTPS download | The word list hosted on GitHub |
+
+The bot never needs its own public address. When it starts, it opens an outgoing WebSocket connection to Discord, and Discord pushes player commands down that connection. Replies go back to Discord over HTTPS. The bot logs in with the token stored in `.env`, which stays on the host PC and is never committed to GitHub.
+
 # Mario - Control Flow
 This diagram shows the control flow between user inputs and outputs, changing logic depending on entries are valid or invalid. 
 <img width="631" height="445" alt="Untitled Diagram drawio (1)" src="https://github.com/user-attachments/assets/35efae80-0385-4d60-91ef-7cc4ce106027" />
