@@ -1,0 +1,35 @@
+# This is a group report for Bot Task 5. All group members should contribute to this file only.
+
+# Aythan Pao
+## Threat Model
+### Introduction
+This analysis will present a formal threat model for the techdle Discord bot, developed in Java. It will identify potential security threats using the STRIDE framework,
+determine their likely impact, and present prevention or mitigation strategies, where possible. 
+### Bot Basic Description
+The techdle bot allows Discord users to play Wordle through slash commands. Figure 1 shows the basic data flows of the bot.
+
+The following serves as a key/legend to the individual components for Figure 1:
+- Discord User: Person interacting with the bot.
+- Discord API: Handles communication between discord and the bot.
+- interactionCreate.js: Handles the majority of the bot's decision making and validation.
+- store.js: Handles the game state.
+- feedback.js: Handles bot output to the user, including failure messages. 
+
+Figure 1
+<img width="1280" height="960" alt="CSS 360 Bot Task 5 Aythan Pao 2026" src="https://github.com/user-attachments/assets/4a397798-df52-4f58-a9f8-b93135c775e0" />
+A trust boundary represents a point where information moves between components with different levels of trust. The boundary in Figure 1 shows that primary boundary 
+is between the user and the bot. All user input is treated as untrusted and must be verified, and measures should be taken to prevent unauthorized access to the bot 
+from the user. 
+### STRIDE Threat Analysis
+The following tables identify potential threats from each STRIDE category
+
+| Spoofing: The user pretends to be someone or something other than theirself |
+| ------------- |
+| Threat | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
+
+## CI/CD Pipeline
+
+## Reflection
