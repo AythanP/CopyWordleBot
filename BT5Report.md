@@ -4,7 +4,7 @@
 ## Threat Model
 ### Introduction
 This analysis will present a formal threat model for the techdle Discord bot, developed in Java. It will identify potential security threats using the STRIDE framework,
-determine their likely impact, and present prevention or mitigation strategies, where possible. 
+determine their likely impact, and present prevention or mitigation strategies, where possible and relevant to the current build. 
 ### Bot Basic Description
 The techdle bot allows Discord users to play Wordle through slash commands. Figure 1 shows the basic data flows of the bot.
 
@@ -25,10 +25,11 @@ The following tables identify potential threats from each STRIDE category
 
 | Spoofing: The user pretends to be someone or something other than theirself |
 | ------------- |
-| Threat | Second Header |
+| Threat | Description | Risk | Impact |
 | ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
+| User/bot spoofing | Preliminary analysis suggests that both the bot and Discord's API have sufficient protections against spoofing attacks. Discord's API 
+should handle all attempts at spoofing by the user. Restricting access to the bot's token in the .env file through the use of .gitignore and avoidance in logging 
+the token in variables and debug console sufficiently protect the bot and its permissions against becoming compromised or misused. | Mitigated | Mitigated |
 
 ## CI/CD Pipeline
 
