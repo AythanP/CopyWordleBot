@@ -26,7 +26,6 @@ The following tables identify potential threats from each STRIDE category
 | Spoofing: The user pretends to be someone or something other than theirself |
 | ------------- |
 | Threat | Description | Risk | Impact |
-| ------------- | ------------- |
 | User/bot spoofing | Preliminary analysis suggests that both the bot and Discord's API have sufficient protections against spoofing attacks. Discord's API 
 should handle all attempts at spoofing by the user. Restricting access to the bot's token in the .env file through the use of .gitignore and avoidance in logging 
 the token in variables and debug console sufficiently protect the bot and its permissions against becoming compromised or misused. | Mitigated | Mitigated |
