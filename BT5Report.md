@@ -21,12 +21,20 @@ A trust boundary represents a point where information moves between components w
 is between the user and the bot. All user input is treated as untrusted and must be verified, and measures should be taken to prevent unauthorized access to the bot 
 from the user. 
 ### STRIDE Threat Analysis
-The following tables identify potential threats from each STRIDE category
+The following tables identify potential threats to the bot, describes them, ranks their risk and impact, and suggests mitigation strategies for each. 
 
-Spoofing: The user pretends to be someone or something other than theirself
+**Spoofing:** The user pretends to be someone or something other than themselves.
+| Threat | Description | Risk | Impact | Mitigation |
+| ------------- | ------------- | ------------- | ------------- |
+| User/bot spoofing | An attacker forges a user's ID or gains access to the bot's .env token, obscuring their real identify. | Negligible | Medium | Preliminary analysis suggests that both the bot and Discord's API have sufficient protections against spoofing attacks. Discord's API should handle all attempts at spoofing the user. Restricting access to the bot's token in the .env file through the use of .gitignore and avoidance in logging the token in variables and debug console sufficiently protect the bot and its permissions against becoming compromised or misused. |
+
+**Tampering:** Application data, functionality, or game state is modified without appropriate authorization. 
 | Threat | Description | Risk | Impact |
 | ------------- | ------------- | ------------- | ------------- |
-| User/bot spoofing | Preliminary analysis suggests that both the bot and Discord's API have sufficient protections against spoofing attacks. Discord's API should handle all attempts at spoofing by the user. Restricting access to the bot's token in the .env file through the use of .gitignore and avoidance in logging the token in variables and debug console sufficiently protect the bot and its permissions against becoming compromised or misused. | Mitigated | Mitigated |
+| Modification of persistent game state | An attacker with access to the bot's local JSON file could modify it to manipulate the current game state. This could result in changes to the user's answer, the number of allowed attempts, and win/loss conditions.  | Negligible | High |
+| Modification of concurrent game states | Preliminary analysis suggests that in order for the identified threats to materialize, the bot's JSON file,  | Negligible | High |
+| Modification of source code | Preliminary analysis suggests that in order for the identified threats to materialize, the bot's JSON file,  | Negligible | High |
+### STRIDE Mitigation Strategies
 
 ## CI/CD Pipeline
 
