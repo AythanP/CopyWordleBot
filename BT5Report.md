@@ -25,15 +25,14 @@ The following tables identify potential threats to the bot, describes them, rank
 
 **Spoofing:** The user pretends to be someone or something other than themselves.
 | Threat | Description | Risk | Impact | Mitigation |
-| ------------- | ------------- | ------------- | ------------- |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
 | User/bot spoofing | An attacker forges a user's ID or gains access to the bot's .env token, obscuring their real identify. | Negligible | Medium | Preliminary analysis suggests that both the bot and Discord's API have sufficient protections against spoofing attacks. Discord's API should handle all attempts at spoofing the user. Restricting access to the bot's token in the .env file through the use of .gitignore and avoidance in logging the token in variables and debug console sufficiently protect the bot and its permissions against becoming compromised or misused. |
 
 **Tampering:** Application data, functionality, or game state is modified without appropriate authorization. 
-| Threat | Description | Risk | Impact |
-| ------------- | ------------- | ------------- | ------------- |
-| Modification of persistent game state | An attacker with access to the bot's local JSON file could modify it to manipulate the current game state. This could result in changes to the user's answer, the number of allowed attempts, and win/loss conditions.  | Negligible | High |
-| Modification of concurrent game states | Preliminary analysis suggests that in order for the identified threats to materialize, the bot's JSON file,  | Negligible | High |
-| Modification of source code | Preliminary analysis suggests that in order for the identified threats to materialize, the bot's JSON file,  | Negligible | High |
+| Threat | Description | Risk | Impact | Mitigation |
+| ------------- | ------------- | ------------- | ------------- | ------------- |
+| Modification of persistent game state | An attacker with access to the bot's local JSON file could modify it to manipulate the current game state. This could result in changes to the user's answer, the number of allowed attempts, and win/loss conditions.  | Low | High | Preliminary analysis suggests that filesystem access to the JSON file is currently only possible with physical access, such as the theft of an author's machine. Any other potential mitigations, such as a dedicated and protected database, may not be necessary and too complex for an application of this size. |
+| Modification of source code | An attacker with access to the bot's source code can manipulate game mechanics, which can result in unlimited max attempts, rigging games to always be won, and additional words being added to the bot's list of answers. | Low | Extreme | Barring physical theft, the only other point of access would be unauthorized intrusion from the github repo, and creating and self-approving malicious PRs. As long as the CI/CD pipeline has sufficient protections and current repo permissions don't change, the likelihood of this happening should remain low. 
 ### STRIDE Mitigation Strategies
 
 ## CI/CD Pipeline
