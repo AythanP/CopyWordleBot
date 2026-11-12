@@ -41,4 +41,4 @@ jobs:
             /test/slash-integration.spec.js \
             /test/start.spec.js \
             /test/validate.spec.js \
-            /test/words.spec.js \
+            /test/words.spec.js
