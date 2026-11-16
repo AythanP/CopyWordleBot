@@ -67,6 +67,59 @@ This diagram shows the control flow between user inputs and outputs, changing lo
 
 # Sida - Class Diagram
 
+```mermaid
+classDiagram
+    class InteractionCreate {
+        +handleInteraction(interaction, client)
+    }
+    class Start {
+        +startGame(userId, store)
+    }
+    class GameStore {
+        -entries
+        +get(key)
+        +set(key, game)
+    }
+    class Game {
+        +answer
+        +maxAttempts
+        +guesses
+        +status
+        +newGame(answer)
+        +submitGuess(game, raw)
+        +attemptsLeft(game)
+        +getStatus(game)
+    }
+    class Validate {
+        +validateGuess(raw)
+    }
+    class Feedback {
+        +scoreGuess(guess, answer)
+        +formatFeedback(statuses)
+    }
+    class Words {
+        +ANSWERS
+        +ALLOWED_GUESSES
+    }
+    class Commands {
+        +techdleCommands()
+    }
+    class RegisterTechdle {
+        +register()
+    }
+
+    InteractionCreate --> Start : /techdle
+    InteractionCreate --> Game : /guess
+    InteractionCreate --> GameStore : saves games
+    InteractionCreate --> Feedback : shows emojis
+    Start --> Words : picks a word
+    Start --> Game : makes new game
+    Game --> Validate : checks guess
+    Game --> Feedback : scores guess
+    GameStore "1" --> "*" Game : stores
+    RegisterTechdle --> Commands : registers
+```
+
 # Abhi - Use Case and Activity Diagram
 
 The use case diagram below shows how a player interacts with TechdleBot through its two slash commands. Players can start or reset a game with `/techdle` and submit guesses with `/guess`. A game must be started before a player can submit a guess.
