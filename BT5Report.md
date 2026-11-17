@@ -128,6 +128,43 @@ The largest issue that I had, which took 3-4 hours of research just on investiga
 
 
 # Sida
+# Fuzzing + Code Analysis Notes
+
+To run the fuzzer: npm install, then npm run fuzz. The fuzzer is in tests/fuzz/techdle.fuzz.js and uses fast-check. It's separate from npm test because two of the tests fail on purpose to show bugs.
+
+The fuzzer throws random input at validateGuess (numbers, objects, unicode, etc.), tests scoreGuess with random 5 letter words against real answers, plays random lists of guesses to check the game rules (no more than 6 guesses, can't guess after the game ends), and sends random /techdle and /guess commands from two fake users.
+
+## Bugs found
+
+1. The bot accepts fake words. fast-check found that "aaaaa" gets accepted as a guess. validateGuess only checks for 5 letters and never uses ALLOWED_GUESSES from words.js, even though we made that list. So players can type aeiou or qqqqq to fish for letters, which real Wordle doesn't let you do.
+
+2. The old !guess command gives wrong colors for repeated letters. If you guess aaaaa and the answer is array, the old code gives 🟩🟨🟨🟩🟨 but it should be 🟩⬛⬛🟩⬛. The old code in app.js just checks word.includes(letter), so every extra "a" turns yellow. The new /guess in feedback.js does it right. Both commands are still live, so players get different answers depending on which one they use.
+
+3. The bot can crash (found by reading the code, not fuzzing). If getWordleWord() fails because there's no internet or GitHub is down, it returns null, and then !guess does word[i] on null. That error happens inside an async event handler, and in Node 22 that crashes the whole bot. I tested this with a small script and the process exited. guildMemberAdd.js has the same problem: it calls channel.send() without checking if the channel was found, so if CHANNEL_NAME is wrong, someone joining the server crashes the bot.
+
+The good news is the new /guess path passed all the random tests. It never crashed and never showed the answer before the game ended.
+
+## Code smells / technical debt
+
+There are two versions of the game. app.js still has the old !wordle and !guess code with its own scoring and its own activeGames map, which duplicates everything in src/game/. We should delete the old one.
+
+There's leftover debug code. console.log("This is a test!!" + word) prints the answer to the logs on every guess, and typing "expand" makes the bot reply DONG.
+
+Some code is never used: ALLOWED_GUESSES (only in tests), WORD_LENGTH, getWelcomeMessage, the axios dependency, and the http import in app.js.
+
+validate.js has three error keys that all say "you need 5 letters", and NOT_LETTERS is never used. The message also doesn't tell the user what was actually wrong.
+
+Some numbers are hardcoded. "6 attempts" is typed into the start message instead of using MAX_ATTEMPTS, and the regex uses {5} instead of WORD_LENGTH.
+
+The README is outdated. It says !guess isn't connected yet and tells people to use !wordle. package.json is still named memebot_discord from the template.
+
+If data/techdle-games.json gets corrupted, every command fails with "could not complete" for every user until someone fixes the file by hand.
+
+## User story
+
+As a Techdle player, I want my guess to be rejected if it isn't a real word so that I can't cheat by typing random letters like "aeiou" to find which letters are in the answer.
+
+Acceptance criteria: /guess qqqqq replies "Not in word list" and doesn't use up an attempt, /guess stack (a real word) still works, and the fuzz test "only accepts real words from the word list" passes.
 
 # Abhi
 ## Technical Debt and Code Smells
