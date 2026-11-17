@@ -165,6 +165,7 @@ If data/techdle-games.json gets corrupted, every command fails with "could not c
 As a Techdle player, I want my guess to be rejected if it isn't a real word so that I can't cheat by typing random letters like "aeiou" to find which letters are in the answer.
 
 Acceptance criteria: /guess qqqqq replies "Not in word list" and doesn't use up an attempt, /guess stack (a real word) still works, and the fuzz test "only accepts real words from the word list" passes.
+
 # Abhi
 ## Technical Debt and Code Smells
 
