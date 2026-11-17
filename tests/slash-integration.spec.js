@@ -86,13 +86,12 @@ describe("Techdle slash integration", () => {
     expect(reply).to.equal("⬛🟩🟨⬛⬛ (Guess 1/6)\n5 attempts left. Use /guess to guess again.");
     expect(reply.toLowerCase()).not.to.include("array");
   });
-  it("scores unlisted guesses, saves them and counts their attempts", async () => {
+  it("rejects made-up words without using an attempt", async () => {
     client.techdleGames = createGameStore(filename);
     startGame("alice", client.techdleGames, () => 0); // array
-    expect(await send("guess", "zzzzz")).to.equal("⬛⬛⬛⬛⬛ (Guess 1/6)\n5 attempts left. Use /guess to guess again.");
-    expect(await send("guess", "razzz")).to.equal("🟨🟨⬛⬛⬛ (Guess 2/6)\n4 attempts left. Use /guess to guess again.");
-    expect(await send("guess", "aaaaa")).to.equal("🟩⬛⬛🟩⬛ (Guess 3/6)\n3 attempts left. Use /guess to guess again.");
-    expect(createGameStore(filename).get("alice").guesses.map(g => g.guess)).to.deep.equal(["zzzzz", "razzz", "aaaaa"]);
+    expect(await send("guess", "zzzzz")).to.equal("That isn't in the word list.");
+    expect(await send("guess", "radar")).to.equal("🟨🟨⬛🟩🟨 (Guess 1/6)\n5 attempts left. Use /guess to guess again.");
+    expect(createGameStore(filename).get("alice").guesses.map(g => g.guess)).to.deep.equal(["radar"]);
   });
   it("loses after six valid wrong guesses and rejects a seventh", async () => {
     const game = await start();
@@ -177,6 +176,69 @@ describe("Techdle slash integration", () => {
     await event.execute(i, client);
     expect(client.techdleGames).to.equal(undefined);
   });
+  it("starts a streak at 1 on a first win and shows it", async () => {
+    const game = await start();
+    expect(await send("guess", game.answer)).to.include("\n🔥 Win streak: 1 (best 1)");
+  });
+  it("counts consecutive wins and saves them next to the games", async () => {
+    for (let n = 0; n < 3; n++) await send("guess", (await start()).answer);
+    const streaks = createGameStore(path.join(dir, "techdle-streaks.json"));
+    expect(streaks.get("alice")).to.deep.equal({ current: 3, best: 3 });
+  });
+  it("resets the streak on a loss but keeps the best", async () => {
+    await send("guess", (await start()).answer);
+    await send("guess", (await start()).answer);
+    const game = await start();
+    let reply;
+    for (let n = 0; n < 6; n++) reply = await send("guess", wrong(game));
+    expect(reply).to.include("The word was");
+    expect(reply).to.include("🔥 Win streak: 0 (best 2)");
+  });
+  it("doesn't show or change the streak mid-game", async () => {
+    await send("guess", (await start()).answer);
+    const game = await start();
+    expect(await send("guess", wrong(game))).not.to.include("streak");
+    expect(await send("streak")).to.equal("🔥 Win streak: 1 (best 1)");
+  });
+  it("shows the streak with /streak, including for a new player", async () => {
+    expect(await send("streak")).to.equal("🔥 Win streak: 0 (best 0)");
+    await send("guess", (await start()).answer);
+    expect(await send("streak")).to.equal("🔥 Win streak: 1 (best 1)");
+  });
+  it("resets the streak when a player skips a game they already guessed in", async () => {
+    await send("guess", (await start()).answer);
+    const game = await start();
+    await send("guess", wrong(game));
+    expect(await send("techdle")).to.include("streak reset to 0 (best 1)");
+    expect(await send("streak")).to.equal("🔥 Win streak: 0 (best 1)");
+  });
+  it("keeps the streak when a new game replaces one with no guesses", async () => {
+    await send("guess", (await start()).answer);
+    await start();
+    expect(await send("techdle")).not.to.include("streak");
+    expect(await send("streak")).to.equal("🔥 Win streak: 1 (best 1)");
+  });
+  it("keeps each player's streak separate", async () => {
+    await send("guess", (await start()).answer);
+    expect(await send("streak", undefined, "bob")).to.equal("🔥 Win streak: 0 (best 0)");
+  });
+  it("reloads saved streaks after a restart", async () => {
+    await send("guess", (await start()).answer);
+    client = {};
+    await send("guess", (await start()).answer);
+    expect(await send("streak")).to.equal("🔥 Win streak: 2 (best 2)");
+  });
+  it("still shows the win if saving the streak fails", async () => {
+    const game = await start();
+    client.techdleStreaks = {
+      get: () => undefined,
+      set() { throw new Error("simulated disk failure"); },
+    };
+    const reply = await send("guess", game.answer);
+    expect(reply).to.include("You win!");
+    expect(reply).not.to.include("streak");
+    expect(createGameStore(filename).get("alice").status).to.equal("won");
+  });
   it("ignores unrelated commands and interactions", async () => {
     const i = interaction("challenge");
     await event.execute(i, client);
@@ -186,13 +248,13 @@ describe("Techdle slash integration", () => {
 });
 
 describe("Techdle command registration", () => {
-  it("POSTs both commands with a required word option and no bulk deletion", async () => {
+  it("POSTs all three commands with a required word option and no bulk deletion", async () => {
     const calls = [];
     await register({ TOKEN: "test", CLIENT_ID: "123", GUILD_ID: "456" }, token => {
       expect(token).to.equal("test");
       return { async post(route, options) { calls.push({ route, ...options }); } };
     });
-    expect(calls.map(c => c.body.name)).to.deep.equal(["techdle", "guess"]);
+    expect(calls.map(c => c.body.name)).to.deep.equal(["techdle", "guess", "streak"]);
     for (const c of calls) expect(c.route).to.equal("/applications/123/guilds/456/commands");
     expect(calls[1].body.options[0]).to.include({ name: "word", required: true, type: 3 });
   });
